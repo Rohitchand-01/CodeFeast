@@ -17,7 +17,7 @@ export const ChatMessages = ({ messages, isLoading, onEditMessage, isDarkMode })
         ? 'bg-[#191919]'
         : 'bg-gray-50'
     }`}>
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto h-full">
         {messages.length === 0 && !isLoading ? (
           <EmptyState isDarkMode={isDarkMode} />
         ) : (

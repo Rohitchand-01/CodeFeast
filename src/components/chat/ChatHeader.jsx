@@ -24,7 +24,7 @@ export const ChatHeader = ({ isDarkMode, onToggleTheme, onClearChat, hasMessages
           {hasMessages && (
             <button
               onClick={onClearChat}
-              className={`p-2 sm:p-2.5 rounded-lg transition-colors ${
+              className={`p-2 cursor-pointer sm:p-2.5 rounded-lg transition-colors ${
                 isDarkMode
                   ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -37,7 +37,7 @@ export const ChatHeader = ({ isDarkMode, onToggleTheme, onClearChat, hasMessages
           )}
           <button
             onClick={onToggleTheme}
-            className={`p-2 sm:p-2.5 rounded-lg transition-colors ${
+            className={`p-2 cursor-pointer sm:p-2.5 rounded-lg transition-colors ${
               isDarkMode
                 ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'

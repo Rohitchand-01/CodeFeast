@@ -74,7 +74,7 @@ export const ChatInput = ({ isLoading, error, onSendMessage, isDarkMode }) => {
             rows={1}
             className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base border rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
               isDarkMode
-                ? 'bg-gray-800 text-gray-100 border-gray-600 dark:focus:ring-blue-400'
+                ? 'bg-[#FFFFFF14] text-gray-100 border-gray-600 dark:focus:ring-blue-400'
                 : 'bg-gray-100 text-gray-800 border-gray-300'
             }`}
             style={{
@@ -87,7 +87,7 @@ export const ChatInput = ({ isLoading, error, onSendMessage, isDarkMode }) => {
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="shrink-0 p-2.5 sm:p-3 rounded-xl text-white transition-all shadow-sm hover:shadow-md disabled:shadow-none bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed"
+            className="shrink-0 p-2.5 cursor-pointer sm:p-3 rounded-xl text-white transition-all shadow-sm hover:shadow-md disabled:shadow-none bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed"
             aria-label="Send message"
           >
             {isLoading ? (
