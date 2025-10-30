@@ -1,0 +1,49 @@
+import React from 'react';
+import { Moon, Sun, Trash2, Bot } from 'lucide-react';
+
+export const ChatHeader = ({ isDarkMode, onToggleTheme, onClearChat, hasMessages }) => {
+  return (
+    <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6 sm:py-4 transition-colors">
+      <div className="flex items-center justify-between max-w-5xl mx-auto">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
+            <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">
+              AI Assistant
+            </h1>
+            <p className="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
+              Powered by Gemini
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {hasMessages && (
+            <button
+              onClick={onClearChat}
+              className="p-2 sm:p-2.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              title="Clear chat"
+              aria-label="Clear chat history"
+            >
+              <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          )}
+          <button
+            onClick={onToggleTheme}
+            className="p-2 sm:p-2.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label="Toggle theme"
+          >
+            {isDarkMode ? (
+              <Sun className="w-4 h-4 sm:w-5 sm:h-5" />
+            ) : (
+              <Moon className="w-4 h-4 sm:w-5 sm:h-5" />
+            )}
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+};
