@@ -1,28 +1,33 @@
-/** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors');
+
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class', // This is crucial!
+  darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter Tight', 'sans-serif'],
+      },
       colors: {
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+        primary: '#191919',
+        gray: {
+          50: '#fafafa',
+          100: '#f5f5f5',
+          200: '#e5e5e5',
+          300: '#d4d4d4',
+          400: '#a3a3a3',
+          500: '#737373',
+          600: '#525252',
+          700: '#404040',
+          800: '#262626',
+          900: '#191919',
         },
       },
       animation: {
-        fadeIn: 'fadeIn 0.3s ease-in',
+        'fadeIn': 'fadeIn 0.3s ease-in-out',
       },
       keyframes: {
         fadeIn: {

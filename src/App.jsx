@@ -6,7 +6,7 @@ import { useChat } from './hooks/useChat';
 import { useTheme } from './hooks/useTheme';
 
 function App() {
-  const { messages, isLoading, error, sendMessage, clearMessages } = useChat();
+  const { messages, isLoading, error, sendMessage, editMessage, clearMessages } = useChat();
   const { isDarkMode, toggleTheme } = useTheme();
 
   const handleClearChat = () => {
@@ -25,7 +25,11 @@ function App() {
           hasMessages={messages.length > 0}
         />
 
-        <ChatMessages messages={messages} isLoading={isLoading} />
+        <ChatMessages 
+          messages={messages} 
+          isLoading={isLoading} 
+          onEditMessage={editMessage}
+        />
 
         <ChatInput
           isLoading={isLoading}

@@ -8,7 +8,7 @@ export const ChatInput = ({ isLoading, error, onSendMessage }) => {
   const handleSend = () => {
     if (!input.trim() || isLoading) return;
     
-    console.log('ChatInput - sending message:', input); // Debug log
+    console.log('ChatInput - sending message:', input);
     
     onSendMessage(input);
     setInput('');

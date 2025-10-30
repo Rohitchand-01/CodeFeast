@@ -6,16 +6,11 @@ export const ChatHeader = ({ isDarkMode, onToggleTheme, onClearChat, hasMessages
     <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6 sm:py-4 transition-colors">
       <div className="flex items-center justify-between max-w-5xl mx-auto">
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
-            <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-          </div>
           <div>
             <h1 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">
-              AI Assistant
+              CodeFeast <span className="text-gray-600 dark:text-gray-400"> Assistant</span>
             </h1>
-            <p className="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
-              Powered by Gemini
-            </p>
+           
           </div>
         </div>
 

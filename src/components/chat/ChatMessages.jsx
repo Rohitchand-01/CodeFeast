@@ -3,7 +3,7 @@ import { Message } from './Message';
 import { TypingIndicator } from './TypingIndicator';
 import { EmptyState } from '../ui/EmptyState';
 
-export const ChatMessages = ({ messages, isLoading }) => {
+export const ChatMessages = ({ messages, isLoading, onEditMessage }) => {
   const messagesEndRef = useRef(null);
 
   console.log('ChatMessages - messages:', messages);
@@ -21,7 +21,11 @@ export const ChatMessages = ({ messages, isLoading }) => {
         ) : (
           <>
             {messages.map((message) => (
-              <Message key={message.id} message={message} />
+              <Message 
+                key={message.id} 
+                message={message} 
+                onEditMessage={onEditMessage}
+              />
             ))}
             {isLoading && <TypingIndicator />}
           </>

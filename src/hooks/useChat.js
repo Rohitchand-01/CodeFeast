@@ -11,7 +11,6 @@ export const useChat = () => {
 
   const sendMessage = useCallback(async (content) => {
     if (!content.trim()) return;
-    const _messages = [...messages];
 
     const userMessage = {
       id: Date.now(),
@@ -23,7 +22,6 @@ export const useChat = () => {
     console.log('Sending user message:', userMessage);
 
     setMessages(prev => [...prev, userMessage]);
-    _messages.push(userMessage);
     setIsLoading(true);
     setError(null);
 
@@ -40,9 +38,7 @@ export const useChat = () => {
 
       console.log('Received AI message:', assistantMessage);
 
-      
-      _messages.push(assistantMessage);
-      setMessages(_messages);
+      setMessages(prev => [...prev, assistantMessage]);
     } catch (err) {
       const errorMessage = err.message || 'Something went wrong. Please try again.';
       setError(errorMessage);
@@ -54,12 +50,64 @@ export const useChat = () => {
         timestamp: new Date().toISOString(),
       };
 
-      _messages.push(errorResponseMessage);
-      setMessages(_messages);
+      setMessages(prev => [...prev, errorResponseMessage]);
     } finally {
       setIsLoading(false);
     }
   }, [setMessages, currentModel]);
+
+  const editMessage = useCallback(async (messageId, newContent) => {
+    console.log('editMessage called with:', messageId, newContent);
+    
+    const messageIndex = messages.findIndex(msg => msg.id === messageId);
+    if (messageIndex === -1) {
+      console.log('Message not found');
+      return;
+    }
+
+    const updatedMessage = {
+      ...messages[messageIndex],
+      content: newContent,
+    };
+
+    const messagesToKeep = [...messages.slice(0, messageIndex), updatedMessage];
+    
+    console.log('Messages to keep:', messagesToKeep);
+    setMessages(messagesToKeep);
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const aiResponse = await callGeminiAPI(newContent, currentModel);
+
+      const assistantMessage = {
+        id: Date.now(),
+        role: 'assistant',
+        content: aiResponse,
+        timestamp: new Date().toISOString(),
+        model: currentModel,
+      };
+
+      console.log('Received AI message after edit:', assistantMessage);
+
+      setMessages([...messagesToKeep, assistantMessage]);
+    } catch (err) {
+      const errorMessage = err.message || 'Something went wrong. Please try again.';
+      setError(errorMessage);
+
+      const errorResponseMessage = {
+        id: Date.now(),
+        role: 'assistant',
+        content: `**Error**: ${errorMessage}`,
+        timestamp: new Date().toISOString(),
+      };
+
+      setMessages([...messagesToKeep, errorResponseMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [messages, setMessages, currentModel]);
 
   const clearMessages = useCallback(() => {
     setMessages([]);
@@ -76,6 +124,7 @@ export const useChat = () => {
     error,
     currentModel,
     sendMessage,
+    editMessage,
     clearMessages,
     changeModel,
   };

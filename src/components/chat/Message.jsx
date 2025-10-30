@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
-import { Copy, Check } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Copy, Check, Edit2, X, Check as CheckIcon } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 
-export const Message = ({ message }) => {
+export const Message = ({ message, onEditMessage }) => {
   const [copied, setCopied] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(message.content);
+  const textareaRef = useRef(null);
   
   const isUser = message.role === 'user';
+
+  useEffect(() => {
+    if (isEditing && textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [isEditing]);
 
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
@@ -16,7 +27,41 @@ export const Message = ({ message }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Helper function to extract text from children (handles React elements)
+  const handleEdit = () => {
+    setIsEditing(true);
+    setEditedContent(message.content);
+  };
+
+  const handleSaveEdit = () => {
+    const trimmedContent = editedContent.trim();
+    if (trimmedContent && trimmedContent !== message.content && onEditMessage) {
+      console.log('Calling onEditMessage with:', message.id, trimmedContent);
+      onEditMessage(message.id, trimmedContent);
+    }
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedContent(message.content);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSaveEdit();
+    }
+    if (e.key === 'Escape') {
+      handleCancelEdit();
+    }
+  };
+
+  const handleTextareaChange = (e) => {
+    setEditedContent(e.target.value);
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  };
+
   const getCodeString = (children) => {
     if (typeof children === 'string') {
       return children;
@@ -46,9 +91,51 @@ export const Message = ({ message }) => {
         }`}
       >
         {isUser ? (
-          <p className="text-sm sm:text-base whitespace-pre-wrap break-words leading-relaxed">
-            {message.content}
-          </p>
+          <>
+            {isEditing ? (
+              <div className="space-y-2">
+                <textarea
+                  ref={textareaRef}
+                  value={editedContent}
+                  onChange={handleTextareaChange}
+                  onKeyDown={handleKeyDown}
+                  className="w-full px-3 py-2 text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  rows="1"
+                />
+                <div className="flex items-center justify-end gap-2">
+                  <button
+                    onClick={handleCancelEdit}
+                    className="flex items-center gap-1 px-2 py-1 text-xs text-white bg-gray-500 hover:bg-gray-600 rounded transition-colors"
+                  >
+                    <X size={14} />
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveEdit}
+                    className="flex items-center gap-1 px-2 py-1 text-xs text-white bg-green-500 hover:bg-green-600 rounded transition-colors"
+                  >
+                    <CheckIcon size={14} />
+                    Save & Regenerate
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <p className="text-sm sm:text-base whitespace-pre-wrap break-words leading-relaxed">
+                  {message.content}
+                </p>
+                {onEditMessage && (
+                  <button
+                    onClick={handleEdit}
+                    className="flex items-center gap-1 mt-2 px-2 py-1 text-xs text-white bg-white/20 hover:bg-white/30 rounded transition-colors"
+                  >
+                    <Edit2 size={12} />
+                    Edit
+                  </button>
+                )}
+              </div>
+            )}
+          </>
         ) : (
           <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none prose-pre:p-0 prose-pre:bg-transparent prose-p:my-2 prose-p:leading-relaxed">
             <ReactMarkdown
@@ -58,7 +145,6 @@ export const Message = ({ message }) => {
                 code({ node, inline, className, children, ...props }) {
                   const match = /language-(\w+)/.exec(className || '');
                   
-                  // Fixed: Use helper function to properly extract code string
                   const codeString = getCodeString(children).replace(/\n$/, '');
 
                   return !inline && match ? (
