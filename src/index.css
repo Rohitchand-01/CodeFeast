@@ -1,9 +1,10 @@
-@import 'highlight.js/styles/atom-one-dark.css';
+/* @import 'highlight.js/styles/atom-one-dark.css'; */
 @import "tailwindcss";
 
 @layer base {
   body {
     @apply antialiased;
+    font-family: 'Inter Tight', sans-serif;
   }
 }
 

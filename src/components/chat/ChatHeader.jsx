@@ -3,7 +3,7 @@ import { Moon, Sun, Trash2, Bot } from 'lucide-react';
 
 export const ChatHeader = ({ isDarkMode, onToggleTheme, onClearChat, hasMessages }) => {
   return (
-    <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6 sm:py-4 transition-colors">
+    <header className="bg-white dark:bg-[#191919]  border-b border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6 sm:py-4 transition-colors">
       <div className="flex items-center justify-between max-w-5xl mx-auto">
         <div className="flex items-center gap-2 sm:gap-3">
           <div>

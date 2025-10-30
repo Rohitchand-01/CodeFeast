@@ -155,7 +155,7 @@ export const Message = ({ message, onEditMessage }) => {
                         </span>
                         <button
                           onClick={() => handleCopy(codeString)}
-                          className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-800"
+                          className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-800"
                           aria-label="Copy code"
                         >
                           {copied ? (

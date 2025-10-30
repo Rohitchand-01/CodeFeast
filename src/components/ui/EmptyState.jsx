@@ -1,7 +1,7 @@
 export const EmptyState = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full px-4 py-8 sm:py-12">
-      <div className="text-center max-w-md">
+    <div className="flex items-center justify-center h-full px-4 py-8 sm:py-12">
+      <div className="text-center items-center max-w-md">
         <div className="mb-6 sm:mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 sm:mb-3">
             Welcome to AI Chat

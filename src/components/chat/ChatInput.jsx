@@ -32,7 +32,7 @@ export const ChatInput = ({ isLoading, error, onSendMessage }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6 sm:py-4 transition-colors">
+    <div className="bg-white dark:bg-[#191919]  border-t border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6 sm:py-4 transition-colors">
       <div className="max-w-4xl mx-auto">
         {error && (
           <div className="mb-3 px-3 py-2 sm:px-4 sm:py-2.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
@@ -40,20 +40,18 @@ export const ChatInput = ({ isLoading, error, onSendMessage }) => {
           </div>
         )}
 
-        <div className="flex items-end gap-2">
-          <div className="flex-1 relative">
+        <div className="flex items-center gap-2">
             <textarea
               ref={textareaRef}
               value={input}
               onChange={handleInputChange}
               onKeyPress={handleKeyPress}
-              placeholder="Type your message... (Shift + Enter for new line)"
+              placeholder="Type your message... "
               rows="1"
               disabled={isLoading}
-              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base bg-gray-100 dark:bg-[#191919]  text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ minHeight: '44px', maxHeight: '150px' }}
             />
-          </div>
 
           <button
             onClick={handleSend}
@@ -68,10 +66,6 @@ export const ChatInput = ({ isLoading, error, onSendMessage }) => {
             )}
           </button>
         </div>
-
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-center sm:text-left">
-          Press Enter to send, Shift + Enter for new line
-        </p>
       </div>
     </div>
   );

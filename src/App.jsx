@@ -17,7 +17,7 @@ function App() {
 
   return (
     <div className={`${isDarkMode ? 'dark' : ''} h-screen`}>
-      <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 transition-colors">
+      <div className="flex flex-col h-full bg-gray-50 dark:bg-[#191919] transition-colors">
         <ChatHeader
           isDarkMode={isDarkMode}
           onToggleTheme={toggleTheme}

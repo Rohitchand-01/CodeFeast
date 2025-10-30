@@ -21,7 +21,13 @@ export const useChat = () => {
 
     console.log('Sending user message:', userMessage);
 
-    setMessages(prev => [...prev, userMessage]);
+    // ✅ Force UI update immediately before async logic
+    setMessages(prev => {
+      const updated = [...prev, userMessage];
+      localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updated));
+      return updated;
+    });
+
     setIsLoading(true);
     setError(null);
 
@@ -38,7 +44,11 @@ export const useChat = () => {
 
       console.log('Received AI message:', assistantMessage);
 
-      setMessages(prev => [...prev, assistantMessage]);
+      setMessages(prev => {
+        const updated = [...prev, assistantMessage];
+        localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updated));
+        return updated;
+      });
     } catch (err) {
       const errorMessage = err.message || 'Something went wrong. Please try again.';
       setError(errorMessage);
@@ -50,7 +60,11 @@ export const useChat = () => {
         timestamp: new Date().toISOString(),
       };
 
-      setMessages(prev => [...prev, errorResponseMessage]);
+      setMessages(prev => {
+        const updated = [...prev, errorResponseMessage];
+        localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updated));
+        return updated;
+      });
     } finally {
       setIsLoading(false);
     }
@@ -59,21 +73,23 @@ export const useChat = () => {
   const editMessage = useCallback(async (messageId, newContent) => {
     console.log('editMessage called with:', messageId, newContent);
     
-    const messageIndex = messages.findIndex(msg => msg.id === messageId);
-    if (messageIndex === -1) {
-      console.log('Message not found');
-      return;
-    }
+    setMessages(prevMessages => {
+      const messageIndex = prevMessages.findIndex(msg => msg.id === messageId);
+      if (messageIndex === -1) {
+        console.log('Message not found');
+        return prevMessages;
+      }
 
-    const updatedMessage = {
-      ...messages[messageIndex],
-      content: newContent,
-    };
+      const updatedMessage = {
+        ...prevMessages[messageIndex],
+        content: newContent,
+      };
 
-    const messagesToKeep = [...messages.slice(0, messageIndex), updatedMessage];
-    
-    console.log('Messages to keep:', messagesToKeep);
-    setMessages(messagesToKeep);
+      const messagesToKeep = [...prevMessages.slice(0, messageIndex), updatedMessage];
+      
+      console.log('Messages to keep:', messagesToKeep);
+      return messagesToKeep;
+    });
 
     setIsLoading(true);
     setError(null);
@@ -91,7 +107,7 @@ export const useChat = () => {
 
       console.log('Received AI message after edit:', assistantMessage);
 
-      setMessages([...messagesToKeep, assistantMessage]);
+      setMessages(prev => [...prev, assistantMessage]);
     } catch (err) {
       const errorMessage = err.message || 'Something went wrong. Please try again.';
       setError(errorMessage);
@@ -103,11 +119,11 @@ export const useChat = () => {
         timestamp: new Date().toISOString(),
       };
 
-      setMessages([...messagesToKeep, errorResponseMessage]);
+      setMessages(prev => [...prev, errorResponseMessage]);
     } finally {
       setIsLoading(false);
     }
-  }, [messages, setMessages, currentModel]);
+  }, [setMessages, currentModel]);
 
   const clearMessages = useCallback(() => {
     setMessages([]);
