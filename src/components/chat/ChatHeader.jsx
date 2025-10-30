@@ -1,16 +1,22 @@
-import React from 'react';
-import { Moon, Sun, Trash2, Bot } from 'lucide-react';
+import { Moon, Sun, Trash2 } from "lucide-react";
 
 export const ChatHeader = ({ isDarkMode, onToggleTheme, onClearChat, hasMessages }) => {
   return (
-    <header className="bg-white dark:bg-[#191919]  border-b border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6 sm:py-4 transition-colors">
+    <header className={`transition-colors px-4 py-3 sm:px-6 sm:py-4 border-b ${
+      isDarkMode 
+        ? 'bg-[#191919] border-gray-700' 
+        : 'bg-white border-gray-200'
+    }`}>
       <div className="flex items-center justify-between max-w-5xl mx-auto">
         <div className="flex items-center gap-2 sm:gap-3">
           <div>
-            <h1 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">
-              CodeFeast <span className="text-gray-600 dark:text-gray-400"> Assistant</span>
+            <h1 className={`text-lg sm:text-xl font-bold ${
+              isDarkMode 
+                ? 'text-white' 
+                : 'text-gray-800'
+            }`}>
+              CodeFeast <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}> Assistant</span>
             </h1>
-           
           </div>
         </div>
 
@@ -18,7 +24,11 @@ export const ChatHeader = ({ isDarkMode, onToggleTheme, onClearChat, hasMessages
           {hasMessages && (
             <button
               onClick={onClearChat}
-              className="p-2 sm:p-2.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              className={`p-2 sm:p-2.5 rounded-lg transition-colors ${
+                isDarkMode
+                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
               title="Clear chat"
               aria-label="Clear chat history"
             >
@@ -27,7 +37,11 @@ export const ChatHeader = ({ isDarkMode, onToggleTheme, onClearChat, hasMessages
           )}
           <button
             onClick={onToggleTheme}
-            className="p-2 sm:p-2.5 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            className={`p-2 sm:p-2.5 rounded-lg transition-colors ${
+              isDarkMode
+                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
             title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
             aria-label="Toggle theme"
           >

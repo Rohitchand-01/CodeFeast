@@ -16,8 +16,8 @@ function App() {
   };
 
   return (
-    <div className={`${isDarkMode ? 'dark' : ''} h-screen`}>
-      <div className="flex flex-col h-full bg-gray-50 dark:bg-[#191919] transition-colors">
+    <div className={isDarkMode ? 'dark' : ''}>
+      <div className="flex flex-col h-screen bg-gray-50 dark:bg-[#191919] transition-colors">
         <ChatHeader
           isDarkMode={isDarkMode}
           onToggleTheme={toggleTheme}
@@ -29,12 +29,14 @@ function App() {
           messages={messages} 
           isLoading={isLoading} 
           onEditMessage={editMessage}
+          isDarkMode={isDarkMode}
         />
 
         <ChatInput
           isLoading={isLoading}
           error={error}
           onSendMessage={sendMessage}
+          isDarkMode={isDarkMode}
         />
       </div>
     </div>

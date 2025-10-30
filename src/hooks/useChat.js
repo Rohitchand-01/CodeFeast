@@ -19,8 +19,6 @@ export const useChat = () => {
       timestamp: new Date().toISOString(),
     };
 
-    console.log('Sending user message:', userMessage);
-
     // ✅ Force UI update immediately before async logic
     setMessages(prev => {
       const updated = [...prev, userMessage];
@@ -41,8 +39,6 @@ export const useChat = () => {
         timestamp: new Date().toISOString(),
         model: currentModel,
       };
-
-      console.log('Received AI message:', assistantMessage);
 
       setMessages(prev => {
         const updated = [...prev, assistantMessage];
@@ -71,12 +67,9 @@ export const useChat = () => {
   }, [setMessages, currentModel]);
 
   const editMessage = useCallback(async (messageId, newContent) => {
-    console.log('editMessage called with:', messageId, newContent);
-    
     setMessages(prevMessages => {
       const messageIndex = prevMessages.findIndex(msg => msg.id === messageId);
       if (messageIndex === -1) {
-        console.log('Message not found');
         return prevMessages;
       }
 
@@ -87,7 +80,6 @@ export const useChat = () => {
 
       const messagesToKeep = [...prevMessages.slice(0, messageIndex), updatedMessage];
       
-      console.log('Messages to keep:', messagesToKeep);
       return messagesToKeep;
     });
 
@@ -104,8 +96,6 @@ export const useChat = () => {
         timestamp: new Date().toISOString(),
         model: currentModel,
       };
-
-      console.log('Received AI message after edit:', assistantMessage);
 
       setMessages(prev => [...prev, assistantMessage]);
     } catch (err) {
