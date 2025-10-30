@@ -30,6 +30,7 @@ export const callGeminiAPI = async (chatHistory) => {
     }
 
     const data = await response.json()
+    console.log(data)
     return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response from AI'
   } catch (error) {
     throw error

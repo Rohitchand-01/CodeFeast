@@ -67,10 +67,13 @@ export const useChat = () => {
   }, [messages, setMessages, currentModel])
 
   const editMessage = useCallback(async (messageId, newContent) => {
+    console.log(messageId, newContent)
+    let _messages = messages
     setMessages(prevMessages => {
       const messageIndex = prevMessages.findIndex(msg => msg.id === messageId)
       if (messageIndex === -1) return prevMessages
       const updatedMessage = { ...prevMessages[messageIndex], content: newContent }
+      _messages = [...prevMessages.slice(0, messageIndex), updatedMessage]
       return [...prevMessages.slice(0, messageIndex), updatedMessage]
     })
 
@@ -78,7 +81,7 @@ export const useChat = () => {
     setError(null)
 
     try {
-      const updatedMessages = messages.map(msg =>
+      const updatedMessages = _messages.map(msg =>
         msg.id === messageId ? { ...msg, content: newContent } : msg
       )
       const aiResponse = await callGeminiAPI(updatedMessages)
