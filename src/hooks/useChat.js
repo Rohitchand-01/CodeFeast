@@ -1,128 +1,122 @@
-import { useState, useCallback } from 'react';
-import { callGeminiAPI } from '../services/geminiApi';
-import { useLocalStorage } from './useLocalStorage';
-import { STORAGE_KEYS } from '../utils/constants';
+import { useState, useCallback } from 'react'
+import { callGeminiAPI } from '../services/geminiApi'
+import { useLocalStorage } from './useLocalStorage'
+import { STORAGE_KEYS } from '../utils/constants'
 
 export const useChat = () => {
-  const [messages, setMessages] = useLocalStorage(STORAGE_KEYS.MESSAGES, []);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [currentModel, setCurrentModel] = useLocalStorage('ai_chat_model', 'gemini-2.5-flash');
+  const [messages, setMessages] = useLocalStorage(STORAGE_KEYS.MESSAGES, [])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [currentModel, setCurrentModel] = useLocalStorage('ai_chat_model', 'gemini-2.5-flash')
 
   const sendMessage = useCallback(async (content) => {
-    if (!content.trim()) return;
+    if (!content.trim()) return
 
     const userMessage = {
       id: Date.now(),
       role: 'user',
       content: content.trim(),
-      timestamp: new Date().toISOString(),
-    };
+      timestamp: new Date().toISOString()
+    }
 
-    // ✅ Force UI update immediately before async logic
     setMessages(prev => {
-      const updated = [...prev, userMessage];
-      localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updated));
-      return updated;
-    });
+      const updated = [...prev, userMessage]
+      localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updated))
+      return updated
+    })
 
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
 
     try {
-      const aiResponse = await callGeminiAPI(content, currentModel);
+      const history = [...messages, userMessage]
+      const aiResponse = await callGeminiAPI(history)
 
       const assistantMessage = {
         id: Date.now() + 1,
         role: 'assistant',
         content: aiResponse,
         timestamp: new Date().toISOString(),
-        model: currentModel,
-      };
+        model: currentModel
+      }
 
       setMessages(prev => {
-        const updated = [...prev, assistantMessage];
-        localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updated));
-        return updated;
-      });
+        const updated = [...prev, assistantMessage]
+        localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updated))
+        return updated
+      })
     } catch (err) {
-      const errorMessage = err.message || 'Something went wrong. Please try again.';
-      setError(errorMessage);
+      const errorMessage = err.message || 'Something went wrong. Please try again.'
+      setError(errorMessage)
 
       const errorResponseMessage = {
         id: Date.now() + 1,
         role: 'assistant',
         content: `**Error**: ${errorMessage}`,
-        timestamp: new Date().toISOString(),
-      };
+        timestamp: new Date().toISOString()
+      }
 
       setMessages(prev => {
-        const updated = [...prev, errorResponseMessage];
-        localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updated));
-        return updated;
-      });
+        const updated = [...prev, errorResponseMessage]
+        localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updated))
+        return updated
+      })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, [setMessages, currentModel]);
+  }, [messages, setMessages, currentModel])
 
   const editMessage = useCallback(async (messageId, newContent) => {
     setMessages(prevMessages => {
-      const messageIndex = prevMessages.findIndex(msg => msg.id === messageId);
-      if (messageIndex === -1) {
-        return prevMessages;
-      }
+      const messageIndex = prevMessages.findIndex(msg => msg.id === messageId)
+      if (messageIndex === -1) return prevMessages
+      const updatedMessage = { ...prevMessages[messageIndex], content: newContent }
+      return [...prevMessages.slice(0, messageIndex), updatedMessage]
+    })
 
-      const updatedMessage = {
-        ...prevMessages[messageIndex],
-        content: newContent,
-      };
-
-      const messagesToKeep = [...prevMessages.slice(0, messageIndex), updatedMessage];
-      
-      return messagesToKeep;
-    });
-
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
 
     try {
-      const aiResponse = await callGeminiAPI(newContent, currentModel);
+      const updatedMessages = messages.map(msg =>
+        msg.id === messageId ? { ...msg, content: newContent } : msg
+      )
+      const aiResponse = await callGeminiAPI(updatedMessages)
 
       const assistantMessage = {
         id: Date.now(),
         role: 'assistant',
         content: aiResponse,
         timestamp: new Date().toISOString(),
-        model: currentModel,
-      };
+        model: currentModel
+      }
 
-      setMessages(prev => [...prev, assistantMessage]);
+      setMessages(prev => [...prev, assistantMessage])
     } catch (err) {
-      const errorMessage = err.message || 'Something went wrong. Please try again.';
-      setError(errorMessage);
+      const errorMessage = err.message || 'Something went wrong. Please try again.'
+      setError(errorMessage)
 
       const errorResponseMessage = {
         id: Date.now(),
         role: 'assistant',
         content: `**Error**: ${errorMessage}`,
-        timestamp: new Date().toISOString(),
-      };
+        timestamp: new Date().toISOString()
+      }
 
-      setMessages(prev => [...prev, errorResponseMessage]);
+      setMessages(prev => [...prev, errorResponseMessage])
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, [setMessages, currentModel]);
+  }, [messages, setMessages, currentModel])
 
   const clearMessages = useCallback(() => {
-    setMessages([]);
-    localStorage.removeItem(STORAGE_KEYS.MESSAGES);
-  }, [setMessages]);
+    setMessages([])
+    localStorage.removeItem(STORAGE_KEYS.MESSAGES)
+  }, [setMessages])
 
   const changeModel = useCallback((modelId) => {
-    setCurrentModel(modelId);
-  }, [setCurrentModel]);
+    setCurrentModel(modelId)
+  }, [setCurrentModel])
 
   return {
     messages,
@@ -132,6 +126,6 @@ export const useChat = () => {
     sendMessage,
     editMessage,
     clearMessages,
-    changeModel,
-  };
-};
+    changeModel
+  }
+}
